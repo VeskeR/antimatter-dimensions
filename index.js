@@ -178,6 +178,8 @@ function init(inputOpts) {
       opts.buyDimensions.sort((a, b) => b - a);
       if (opts.buyDimensions.length < 8) {
         this.upgrade.canUseMaxAll = false;
+      } else {
+        this.upgrade.canUseMaxAll = true;
       }
     },
     start: function () {
