@@ -199,7 +199,7 @@ function init(inputOpts) {
     start: function () {
       this.shouldStop = false;
 
-      this.progressTimeout = setTimeout(function progress() {
+      function progress() {
         if (ad.shouldStop) {
           ad.progressTimeout = null;
           return;
@@ -211,9 +211,9 @@ function init(inputOpts) {
         ad.upgrade.sacrifice.sacrifice();
 
         ad.progressTimeout = setTimeout(progress, opts.progressCallDelay);
-      }, opts.progressCallDelay);
+      }
 
-      this.maxAllTimeout = setTimeout(function upgrade() {
+      function maxAll() {
         if (ad.shouldStop) {
           ad.maxAllTimeout = null;
           return;
@@ -225,10 +225,10 @@ function init(inputOpts) {
           ad.upgrade.tickSpeed.click();
           ad.upgrade.dimensions.maxAll();
         }
-        ad.maxAllTimeout = setTimeout(upgrade, opts.maxAllCallDelay);
-      }, opts.maxAllCallDelay);
+        ad.maxAllTimeout = setTimeout(maxAll, opts.maxAllCallDelay);
+      }
 
-      this.upgradeTimeout = setTimeout(async function upgrade() {
+      async function upgrade() {
         if (ad.shouldStop) {
           ad.upgradeTimeout = null;
           return;
@@ -236,7 +236,11 @@ function init(inputOpts) {
 
         await ad.upgrade.dimensions.upgrade();
         ad.upgradeTimeout = setTimeout(upgrade, opts.upgradeCallDelay);
-      }, opts.upgradeCallDelay);
+      }
+
+      progress();
+      maxAll();
+      upgrade();
     },
     stop: function () {
       this.shouldStop = true;
