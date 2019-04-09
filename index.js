@@ -25,9 +25,9 @@ function init(inputOpts) {
         (percent >= 1.5 && bonus >= 3) ||
         bonus >= 4;
     },
-    progressCallDelay: 100,
-    maxAllCallDelay: 10,
-    upgradeCallDelay: 10,
+    progressCallDelay: 50,
+    maxAllCallDelay: 5,
+    upgradeCallDelay: 5,
     buyDimensions: [1, 2, 3, 4, 5, 6, 7, 8]
   };
 
@@ -168,7 +168,14 @@ function init(inputOpts) {
       opts.buyDimensions.sort((a, b) => b - a);
     },
     start: function () {
+      this.shouldStop = false;
+
       this.progressTimeout = setTimeout(function progress() {
+        if (ad.shouldStop) {
+          ad.progressTimeout = null;
+          return;
+        }
+
         ad.progress.bigCrunch.do();
         ad.progress.antimatterGalaxy.do();
         ad.progress.dimensionShiftBoost.do();
@@ -178,29 +185,44 @@ function init(inputOpts) {
       }, opts.progressCallDelay);
 
       this.maxAllTimeout = setTimeout(function upgrade() {
+        if (ad.maxAllTimeout) {
+          ad.progressTimeout = null;
+          return;
+        }
+
         ad.upgrade.maxAll.click();
         ad.maxAllTimeout = setTimeout(upgrade, opts.maxAllCallDelay);
       }, opts.maxAllCallDelay);
 
       this.upgradeTimeout = setTimeout(async function upgrade() {
+        if (ad.upgradeTimeout) {
+          ad.progressTimeout = null;
+          return;
+        }
+
         await ad.upgrade.dimensions.upgrade();
         ad.upgradeTimeout = setTimeout(upgrade, opts.upgradeCallDelay);
       }, opts.upgradeCallDelay);
     },
     stop: function () {
+      this.shouldStop = true;
       if (!!this.progressTimeout) {
         clearTimeout(this.progressTimeout);
+        this.progressTimeout = null;
       }
       if (!!this.maxAllTimeout) {
         clearTimeout(this.maxAllTimeout);
+        this.maxAllTimeout = null;
       }
       if (!!this.upgradeTimeout) {
         clearTimeout(this.upgradeTimeout);
+        this.upgradeTimeout = null;
       }
     },
     progressTimeout: null,
     maxAllTimeout: null,
-    upgradeTimeout: null
+    upgradeTimeout: null,
+    shouldStop: false
   };
 
   ad.setOpts(inputOpts);
