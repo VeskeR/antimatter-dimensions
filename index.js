@@ -28,6 +28,8 @@ function init(inputOpts) {
     progressCallDelay: 50,
     maxAllCallDelay: 5,
     upgradeCallDelay: 5,
+    useBuyMax: true,
+    useBuyOne: true,
     buyDimensions: [1, 2, 3, 4, 5, 6, 7, 8]
   };
 
@@ -72,12 +74,14 @@ function init(inputOpts) {
           });
         },
         upgrade: async function () {
-          for (let i = 0; i < opts.buyDimensions.length; i++) {
-            const dimension = this.get(opts.buyDimensions[i]);
-            if (dimension.isActive()) {
-              while (dimension.buyOne.hasClass('storebtn')) {
-                dimension.buyOne.click();
-                await wait(0);
+          if (opts.useBuyOne) {
+            for (let i = 0; i < opts.buyDimensions.length; i++) {
+              const dimension = this.get(opts.buyDimensions[i]);
+              if (dimension.isActive()) {
+                while (dimension.buyOne.hasClass('storebtn')) {
+                  dimension.buyOne.click();
+                  await wait(0);
+                }
               }
             }
           }
@@ -215,7 +219,7 @@ function init(inputOpts) {
           return;
         }
 
-        if (ad.upgrade.canUseMaxAll) {
+        if (ad.upgrade.canUseMaxAll && opts.useBuyMax) {
           ad.upgrade.maxAll.click();
         } else {
           ad.upgrade.tickSpeed.click();
@@ -289,5 +293,7 @@ init({
   progressCallDelay: 50,
   maxAllCallDelay: 5,
   upgradeCallDelay: 5,
+  useBuyMax: true,
+  useBuyOne: true,
   buyDimensions: [1, 2, 3, 4, 5, 6, 7, 8]
 });
