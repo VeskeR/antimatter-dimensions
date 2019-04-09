@@ -1,0 +1,61 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# input/output
+/input/*
+/output/*
+
+# firebase
+/.firebase/*.cache
+.firebase
+firebase-debug.log
+
+# workers data
+/statistic-worker-reports/*
+!/statistic-worker-reports/log-report.js
+
+# tests
+/mochawesome-report
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+.env
+!.gitkeep
+*.log
+profitwhales-3e56725e5663.json
+token.json
+result.json
