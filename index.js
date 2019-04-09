@@ -243,5 +243,21 @@ function init(inputOpts) {
 
 forceStop();
 init({
+  dimensionShiftBoostMax: Infinity,
   antimatterGalaxyMax: 1,
+  sacrificeDimensionPercentCheck: 7,
+  isSacrificeEfficient: (percent, bonus) => {
+    return (percent >= 64 && bonus >= 1.25) ||
+      (percent >= 32 && bonus >= 1.3) ||
+      (percent >= 16 && bonus >= 1.4) ||
+      (percent >= 8 && bonus >= 1.5) ||
+      (percent >= 4 && bonus >= 1.75) ||
+      (percent >= 2 && bonus >= 2) ||
+      (percent >= 1.5 && bonus >= 3) ||
+      bonus >= 4;
+  },
+  progressCallDelay: 50,
+  maxAllCallDelay: 5,
+  upgradeCallDelay: 5,
+  buyDimensions: [1, 2, 3, 4, 5, 6, 7, 8]
 });
