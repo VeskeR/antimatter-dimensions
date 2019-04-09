@@ -185,8 +185,8 @@ function init(inputOpts) {
       }, opts.progressCallDelay);
 
       this.maxAllTimeout = setTimeout(function upgrade() {
-        if (ad.maxAllTimeout) {
-          ad.progressTimeout = null;
+        if (ad.shouldStop) {
+          ad.maxAllTimeout = null;
           return;
         }
 
@@ -195,8 +195,8 @@ function init(inputOpts) {
       }, opts.maxAllCallDelay);
 
       this.upgradeTimeout = setTimeout(async function upgrade() {
-        if (ad.upgradeTimeout) {
-          ad.progressTimeout = null;
+        if (ad.shouldStop) {
+          ad.upgradeTimeout = null;
           return;
         }
 
