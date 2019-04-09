@@ -35,7 +35,9 @@ function init(inputOpts) {
 
   const ad = {
     upgrade: {
+      canUseMaxAll: true,
       maxAll: $('#maxall'),
+      tickSpeed: $('#tickSpeed'),
       dimensions: {
         percentRegExp: /\(([+-])(\d+\.?\d+)%\/s\)/,
         get: function (dimension) {
@@ -72,6 +74,14 @@ function init(inputOpts) {
                 dimension.buyOne.click();
                 await wait(0);
               }
+            }
+          }
+        },
+        maxAll: async function () {
+          for (let i = 0; i < opts.buyDimensions.length; i++) {
+            const dimension = this.get(opts.buyDimensions[i]);
+            if (dimension.isActive()) {
+              dimension.buyMax.click();
             }
           }
         },
@@ -166,6 +176,9 @@ function init(inputOpts) {
     setOpts: function (newOpts) {
       opts = { ...opts, ...newOpts };
       opts.buyDimensions.sort((a, b) => b - a);
+      if (opts.buyDimensions.length < 8) {
+        this.upgrade.canUseMaxAll = false;
+      }
     },
     start: function () {
       this.shouldStop = false;
@@ -190,7 +203,12 @@ function init(inputOpts) {
           return;
         }
 
-        ad.upgrade.maxAll.click();
+        if (ad.upgrade.canUseMaxAll) {
+          ad.upgrade.maxAll.click();
+        } else {
+          ad.upgrade.tickSpeed.click();
+          ad.upgrade.dimensions.maxAll();
+        }
         ad.maxAllTimeout = setTimeout(upgrade, opts.maxAllCallDelay);
       }, opts.maxAllCallDelay);
 
