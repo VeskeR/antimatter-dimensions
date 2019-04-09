@@ -21,8 +21,8 @@ function init(inputOpts) {
         (percent >= 1.5 && bonus >= 3) ||
         bonus >= 4;
     },
-    progressCallDelay: 100,
-    upgradeCallDelay: 50,
+    progressCallDelay: 50,
+    upgradeCallDelay: 10,
     buyDimensions: [1, 2, 3, 4, 5, 6, 7, 8]
   };
 
@@ -48,9 +48,7 @@ function init(inputOpts) {
             amount: $amount,
             buyOne: $buyOne,
             buyMax: $buyMax,
-            isActive: () => {
-              return $row.css('display') !== 'none';
-            },
+            isActive: () => $row.css('display') !== 'none',
             getPercent: () => {
               const res = ad.upgrade.dimensions.percentRegExp.exec($amount.text());
               if (res && res[1] && res[2]) {
@@ -62,7 +60,7 @@ function init(inputOpts) {
           });
         },
         upgrade: async function () {
-          for (let i = 0; i < opts.buyDimensions; i++) {
+          for (let i = 0; i < opts.buyDimensions.length; i++) {
             const dimension = this.get(opts.buyDimensions[i]);
             if (dimension.isActive()) {
               while (dimension.buyOne.hasClass('storebtn')) {
