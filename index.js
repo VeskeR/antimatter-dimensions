@@ -39,7 +39,7 @@ function init(inputOpts) {
       maxAll: $('#maxall'),
       tickSpeed: $('#tickSpeed'),
       dimensions: {
-        percentRegExp: /\(([+-])(\d+\.?\d+)%\/s\)/,
+        percentRegExp: /\(([+-])(\d+\.?\d+)(e(\d+))?%\/s\)/,
         get: function (dimension) {
           return this.list[dimension - 1];
         },
@@ -59,7 +59,12 @@ function init(inputOpts) {
             getPercent: () => {
               const res = ad.upgrade.dimensions.percentRegExp.exec($amount.text());
               if (res && res[1] && res[2]) {
-                return res[1] === '-' ? +res[2] * -1 : +res[2];
+                const integral = res[1] === '-' ? +res[2] * -1 : +res[2];
+                if (res[3] && res[4]) {
+                  return integral * 10 ** +res[4];
+                } else {
+                  return integral;
+                }
               } else {
                 return null;
               }
@@ -90,14 +95,19 @@ function init(inputOpts) {
       sacrifice: {
         button: $('#sacrifice'),
         confirm: $('#confirmation'),
-        sacrificeBonusRegExp: /\((\d+\.?\d+)x\)/,
+        sacrificeBonusRegExp: /\((\d+\.?\d+)(e(\d+))?x\)/,
         isActive: function () {
           return this.button.css('display') !== 'none' && !this.button.hasClass('unavailablebtn');
         },
         getBonus: function () {
           const res = this.sacrificeBonusRegExp.exec(this.button.text());
           if (res && res[1]) {
-            return +res[1];
+            const integral = +res[1];
+            if (res[2] && res[3]) {
+              return integral * 10 ** +res[3];
+            } else {
+              return integral;
+            }
           } else {
             return null;
           }
