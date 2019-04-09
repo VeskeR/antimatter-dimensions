@@ -1,7 +1,11 @@
-function init(inputOpts) {
+function forceStop() {
   if (window.ad && window.ad.stop && typeof window.ad.stop === 'function') {
     window.ad.stop();
   }
+}
+
+function init(inputOpts) {
+  forceStop();
 
   async function wait(num) {
     return new Promise((resolve) => setTimeout(resolve, num));
@@ -21,7 +25,8 @@ function init(inputOpts) {
         (percent >= 1.5 && bonus >= 3) ||
         bonus >= 4;
     },
-    progressCallDelay: 50,
+    progressCallDelay: 100,
+    maxAllCallDelay: 10,
     upgradeCallDelay: 10,
     buyDimensions: [1, 2, 3, 4, 5, 6, 7, 8]
   };
@@ -88,12 +93,14 @@ function init(inputOpts) {
           }
         },
         sacrifice: function () {
-          const percent = ad.upgrade.dimensions.get(opts.sacrificeDimensionPercentCheck).getPercent();
-          const bonus = this.getBonus();
-          if (percent && bonus && opts.isSacrificeEfficient(percent, bonus)) {
-            this.confirm.prop('checked', true);
-            this.button.click();
-            console.log(`Dimensional sacrifice at: percent=${percent}, bonus=${bonus}`);
+          if (this.isActive()) {
+            const percent = ad.upgrade.dimensions.get(opts.sacrificeDimensionPercentCheck).getPercent();
+            const bonus = this.getBonus();
+            if (percent && bonus && opts.isSacrificeEfficient(percent, bonus)) {
+              this.confirm.prop('checked', true);
+              this.button.click();
+              console.log(`Dimensional sacrifice at: percent=${percent}, bonus=${bonus}`);
+            }
           }
         }
       }
@@ -165,15 +172,18 @@ function init(inputOpts) {
         ad.progress.bigCrunch.do();
         ad.progress.antimatterGalaxy.do();
         ad.progress.dimensionShiftBoost.do();
+        ad.upgrade.sacrifice.sacrifice();
 
         ad.progressTimeout = setTimeout(progress, opts.progressCallDelay);
       }, opts.progressCallDelay);
 
-      this.upgradeTimeout = setTimeout(async function upgrade() {
+      this.maxAllTimeout = setTimeout(function upgrade() {
         ad.upgrade.maxAll.click();
-        ad.upgrade.sacrifice.sacrifice();
-        await ad.upgrade.dimensions.upgrade();
+        ad.maxAllTimeout = setTimeout(upgrade, opts.maxAllCallDelay);
+      }, opts.maxAllCallDelay);
 
+      this.upgradeTimeout = setTimeout(async function upgrade() {
+        await ad.upgrade.dimensions.upgrade();
         ad.upgradeTimeout = setTimeout(upgrade, opts.upgradeCallDelay);
       }, opts.upgradeCallDelay);
     },
@@ -181,11 +191,15 @@ function init(inputOpts) {
       if (!!this.progressTimeout) {
         clearTimeout(this.progressTimeout);
       }
+      if (!!this.maxAllTimeout) {
+        clearTimeout(this.maxAllTimeout);
+      }
       if (!!this.upgradeTimeout) {
         clearTimeout(this.upgradeTimeout);
       }
     },
     progressTimeout: null,
+    maxAllTimeout: null,
     upgradeTimeout: null
   };
 
@@ -205,6 +219,7 @@ function init(inputOpts) {
   window.ad = ad;
 }
 
+forceStop();
 init({
   antimatterGalaxyMax: 1,
 });
