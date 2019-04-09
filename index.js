@@ -172,16 +172,12 @@ function init(inputOpts) {
       }, opts.progressCallDelay);
 
       this.upgradeTimeout = setTimeout(async function upgrade() {
-
+        ad.upgrade.maxAll.click();
+        ad.upgrade.sacrifice.sacrifice();
+        await ad.upgrade.dimensions.upgrade();
 
         ad.upgradeTimeout = setTimeout(upgrade, opts.upgradeCallDelay);
       }, opts.upgradeCallDelay);
-
-      this.upgradeInterval = setInterval(async () => {
-        ad.upgrade.maxAll.click();
-        ad.upgrade.sacrifice.sacrifice();
-        // await upgradeDimensions();
-      }, opts.upgradeInterval);
     },
     stop: function () {
       if (!!this.progressTimeout) {
