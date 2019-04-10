@@ -126,7 +126,6 @@ function init(inputOpts) {
             if (percent && bonus && opts.isSacrificeEfficient(percent, bonus)) {
               this.confirm.prop('checked', true);
               this.button.click();
-              console.log(`Dimensional sacrifice at: percent=${percent}, bonus=${bonus}`);
             }
           }
         }
@@ -195,7 +194,7 @@ function init(inputOpts) {
           const galaxies = ad.progress.antimatterGalaxy.getCount();
           if (dimBoosts && galaxies && this.isActive() && opts.doPostInfinityBigCrunch(dimBoosts, galaxies)) {
             console.log('Performing Post Infinity Big Crunch');
-            this.button.click();
+            bigCrunch();
           }
         }
       }
