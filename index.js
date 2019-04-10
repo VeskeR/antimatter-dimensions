@@ -12,9 +12,6 @@ function init(inputOpts) {
   }
 
   const defaultOpts = {
-    dimensionShiftBoostMax: Infinity,
-    antimatterGalaxyMax: Infinity,
-    sacrificeDimensionPercentCheck: 7,
     isSacrificeEfficient: (percent, bonus) => {
       return (percent >= 64 && bonus >= 1.25) ||
         (percent >= 32 && bonus >= 1.3) ||
@@ -25,8 +22,14 @@ function init(inputOpts) {
         (percent >= 1.5 && bonus >= 3) ||
         bonus >= 4;
     },
+    doPostInfinityBigCrunch: (dimBoosts, galaxies) => {
+      return galaxies > 7 || (galaxies === 7 && dimBoosts >= 36);
+    },
+    dimensionShiftBoostMax: Infinity,
+    antimatterGalaxyMax: Infinity,
+    sacrificeDimensionPercentCheck: 7,
     progressCallDelay: 50,
-    maxAllCallDelay: 5,
+    maxAllCallDelay: 1,
     upgradeCallDelay: 5,
     useBuyMax: true,
     useBuyOne: true,
@@ -181,6 +184,20 @@ function init(inputOpts) {
             this.button.click();
           }
         }
+      },
+      postInfinityBigCrunch: {
+        button: $('#postInfinityButton'),
+        isActive: function () {
+          return this.button.css('display') !== 'none';
+        },
+        do: function () {
+          const dimBoosts = ad.progress.dimensionShiftBoost.getCount();
+          const galaxies = ad.progress.antimatterGalaxy.getCount();
+          if (dimBoosts && galaxies && this.isActive() && opts.doPostInfinityBigCrunch(dimBoosts, galaxies)) {
+            console.log('Performing Post Infinity Big Crunch');
+            this.button.click();
+          }
+        }
       }
     },
     resetOpts: function () {
@@ -281,9 +298,6 @@ function init(inputOpts) {
 
 forceStop();
 init({
-  dimensionShiftBoostMax: Infinity,
-  antimatterGalaxyMax: 1,
-  sacrificeDimensionPercentCheck: 7,
   isSacrificeEfficient: (percent, bonus) => {
     return (percent >= 64 && bonus >= 1.25) ||
       (percent >= 32 && bonus >= 1.3) ||
@@ -294,6 +308,12 @@ init({
       (percent >= 1.5 && bonus >= 3) ||
       bonus >= 4;
   },
+  doPostInfinityBigCrunch: (dimBoosts, galaxies) => {
+    return galaxies > 7 || (galaxies === 7 && dimBoosts >= 36);
+  },
+  dimensionShiftBoostMax: Infinity,
+  antimatterGalaxyMax: Infinity,
+  sacrificeDimensionPercentCheck: 7,
   progressCallDelay: 50,
   maxAllCallDelay: 1,
   upgradeCallDelay: 5,
