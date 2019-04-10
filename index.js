@@ -222,6 +222,7 @@ function init(inputOpts) {
           return;
         }
 
+        ad.progress.postInfinityBigCrunch.do();
         ad.progress.bigCrunch.do();
         ad.progress.antimatterGalaxy.do();
         ad.progress.dimensionShiftBoost.do();
