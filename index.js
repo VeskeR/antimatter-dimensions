@@ -222,8 +222,8 @@ function init(inputOpts) {
         if (ad.upgrade.canUseMaxAll && opts.useBuyMax) {
           ad.upgrade.maxAll.click();
         } else {
-          ad.upgrade.tickSpeed.click();
           ad.upgrade.dimensions.maxAll();
+          ad.upgrade.tickSpeed.click();
         }
         ad.maxAllTimeout = setTimeout(maxAll, opts.maxAllCallDelay);
       }
