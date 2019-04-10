@@ -295,9 +295,10 @@ init({
       bonus >= 4;
   },
   progressCallDelay: 50,
-  maxAllCallDelay: 5,
+  maxAllCallDelay: 1,
   upgradeCallDelay: 5,
   useBuyMax: true,
   useBuyOne: true,
   buyDimensions: [1, 2, 3, 4, 5, 6, 7, 8]
 });
+ad.start();
